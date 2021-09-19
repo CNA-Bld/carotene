@@ -21,10 +21,10 @@ type row struct {
 func main() {
 	d := flag.Duration("duration", 60*24*time.Hour, "Duration to generate report")
 	tcp := flag.Int64("circle", 0, "Circle ID to record; 0 (default) for circles the packet capturer is in; -1 for all")
-	circleID := uint64(*tcp)
 
 	p, files := utils.ParsePathArg()
 	since := time.Now().Add(-*d)
+	circleID := *tcp
 
 	rows := make(map[uint64]*row)
 	var times []time.Time
@@ -47,7 +47,7 @@ func main() {
 			data := d["data"].(map[string]interface{})
 
 			if circleID >= 0 {
-				if circleID > 0 && circleID != data["circle_info"].(map[string]interface{})["circle_id"].(uint64) {
+				if circleID > 0 && uint64(circleID) != data["circle_info"].(map[string]interface{})["circle_id"].(uint64) {
 					continue
 				}
 
